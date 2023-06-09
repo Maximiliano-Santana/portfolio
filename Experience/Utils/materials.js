@@ -20,21 +20,40 @@ export default class Materials{
     }
 
     SetMaterials(){
+        console.log(this.room);
         console.log(this.room.getObjectByName('Guitarra'));
         
+        //Room
         this.room.getObjectByName('Piso').material = this.floorMaterial ;
         this.room.getObjectByName('Pared').material = this.floorMaterial;
+        this.room.getObjectByName('Ventana').material = this.floorMaterial;
+        this.room.getObjectByName('Leds').material = this.glowingRedMaterial;
 
+        //furniture
         this.room.getObjectByName('Mesa').material = this.glassMaterial;
         this.room.getObjectByName('Patas').material = this.tableLegsMaterial;
 
+        //PC
         this.room.getObjectByName('Ventiladores').material = this.glowingRedMaterial;
-        this.room.getObjectByName('Leds').material = this.glowingRedMaterial;
+        this.room.getObjectByName('case').children[1].material = this.glowingRedMaterial;
+
+        this.room.getObjectByName('Grafica').children[2].material = this.glowingRedMaterial;
+        this.room.getObjectByName('Grafica').children[1].material = this.tableLegsMaterial;
+
+        this.room.getObjectByName('TecladoDer').children[3].material = this.glowingRedMaterial;
+
+        this.room.getObjectByName('TecladoIzq').children[3].material = this.glowingRedMaterial;
+
+
+
         
+        //Decoration
         this.room.getObjectByName('Guitarra').children[0].material = this.blackGuitarMaterial;
         this.room.getObjectByName('Guitarra').children[1].material = this.ropeWhiteMaterial;
         this.room.getObjectByName('Guitarra').children[2].material = this.ropeWhiteMaterial;
         this.room.getObjectByName('Guitarra').children[3].material = this.ropeWhiteMaterial;
+
+        this.room.getObjectByName('Maceta').material = this.floorMaterial;
         
     }
 
@@ -48,8 +67,8 @@ export default class Materials{
         this.glassMaterial = new THREE.MeshPhysicalMaterial(1,1,1);
         this.glassMaterial.transmission = 1;
         this.glassMaterial.roughness = 0.0;
-        this.glassMaterial.ior = 1.7;
-        this.glassMaterial.thickness= 0.5;
+        this.glassMaterial.ior = 1.5;
+        this.glassMaterial.thickness= 0;
         this.glassMaterial.specularIntensity = 1;
         this.glassMaterial.clearcoat = 1;
     }
@@ -80,7 +99,8 @@ export default class Materials{
     CreateGlowingRedMaterial(){
         this.glowingRedMaterial = new THREE.MeshBasicMaterial({
             color: 0xff0000, 
-            emissive: 0xff0000
+            emissive: 0xff0000,
+            emissiveIntensity: 2
           });
     }
 
@@ -93,11 +113,13 @@ export default class Materials{
     }
 
     CreteGuitarMaterials(){
-        this.blackGuitarMaterial = new THREE.MeshStandardMaterial({
+        this.blackGuitarMaterial = new THREE.MeshPhysicalMaterial({
             color: 0x000000,      // Color negro
             roughness: 0.0,       // Rugosidad (puede ajustarse según el nivel de brillo deseado)
             metalness: 0,       // Metalicidad (puede ajustarse según el nivel de brillo deseado)
-          });
+        });
+        this.blackGuitarMaterial.clearcoat = 1;
+        
 
         this.ropeWhiteMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff, // Color blanco

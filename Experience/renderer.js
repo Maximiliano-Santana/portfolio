@@ -55,6 +55,7 @@ export default class Renderer{
         this.bloomComposer.renderToScreen = true;
         this.bloomComposer.addPass(this.rendereScene);
         this.bloomComposer.addPass(this.bloomPass);
+        this.bloomComposer.alpha = true;
 
     }
 
@@ -64,7 +65,6 @@ export default class Renderer{
     }
 
     update(){
-        this.bloomComposer.render(this.scene, this.camera.perspectiveCamera);
-        //this.bloomComposer.render(this.scene, this.camera.perspectiveCamera);
+        this.renderer.render(this.scene, this.camera.perspectiveCamera);
     }
 }
