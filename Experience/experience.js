@@ -4,6 +4,7 @@ import Sizes from './Utils/sizes.js';
 import Time from './Utils/time.js';
 import Resources from './Utils/resources.js';
 import assets from './Utils/assets.js';
+import Materials from './Utils/materials.js';
 
 import Camera from './camera.js';
 import Renderer from './renderer.js';
@@ -26,6 +27,11 @@ export default class Experience{
         this.renderer = new Renderer();
         this.resources = new Resources(assets);
         this.world = new World();
+
+        this.world.on("room-added", ()=>{
+            this.materials = new Materials();
+        });
+
 
         this.sizes.on("resize", ()=>{
             this.resize();

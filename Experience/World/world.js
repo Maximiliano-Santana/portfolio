@@ -1,11 +1,15 @@
-import * as THREE from "three";
+
 import Experience from "../experience.js";
 import Enviroment from "./enviroment.js";
 
+
 import Room from "./room.js";
 
-export default class World{
+import EventEmitter from "events";
+
+export default class World extends EventEmitter{
     constructor (){
+        super();
         this.experience = new Experience();
         this.sizes = this.experience.sizes;
         this.scene = this.experience.scene;
@@ -16,6 +20,7 @@ export default class World{
         this.resources.on('ready', ()=>{
             this.enviroment = new Enviroment();
             this.room = new Room();
+            this.emit('room-added');
         });
     }
 
