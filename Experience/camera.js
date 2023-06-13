@@ -23,6 +23,12 @@ export default class Camera{
         );
         this.scene.add(this.perspectiveCamera);
         this.perspectiveCamera.position.z = 10;
+
+        console.log(this.perspectiveCamera);
+
+
+
+
     
         const size = 10;
         const divisions = 10;

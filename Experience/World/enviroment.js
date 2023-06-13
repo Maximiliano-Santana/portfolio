@@ -1,9 +1,12 @@
 import * as THREE from "three";
-import Experience from "../experience.js";
-import { PointLightHelper } from "three";
 
-export default class Enviroment{
+import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js';
+import Experience from "../experience.js";
+
+
+export default class Enviroment extends RGBELoader{
     constructor (){
+        super();
         this.Degree45 = 0.785398;
         this.Degree90 = 1.5708;
         this.Degree180 = 3.14159;
@@ -11,6 +14,8 @@ export default class Enviroment{
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
+
+        this.SetHDRI();
         
         this.setSunlight();
         this.setLampLight();
@@ -29,18 +34,27 @@ export default class Enviroment{
         //this.lampLight.add(this.pointHelp);
     }
 
+    SetHDRI(){
+        this.hdrLoader = new RGBELoader();
+
+        this.hdrLoader.load('/Experience/public/Textures/sky.hdr', function(texture){
+            console.log('hola');
+        });
+    }
+
     setSunlight(){
         this.sunLight = new THREE.DirectionalLight("#ffffff", 0.15);
-        this.sunLight.position.set(-5, 3, -1);
+        this.sunLight.position.set(-3, 2, -0.5);
         this.sunLight.castShadow = true;
-        this.sunLight.shadow.camera.far = 20;
-        this.sunLight.shadow.mapSize.set(1040,1040);
-        this.sunLight.shadow.normalBias = 0.05;
+        this.sunLight.shadow.camera.far = 5;
+        this.sunLight.shadow.mapSize.set(2080,2080);
+
+        console.log(this.sunLight.shadow.radius)
         this.scene.add(this.sunLight);
     }
 
     setAmbienLight(){
-        this.ambienLinght = new THREE.AmbientLight(0xffffff, 0.01);
+        this.ambienLinght = new THREE.AmbientLight(0xffffff, 0.055);
         this.scene.add(this.ambienLinght);
     }
 
@@ -56,12 +70,7 @@ export default class Enviroment{
         this.scene.add(this.screenLight);
     }
 
-    setLampLight(){
-        // this.example = new THREE.SphereGeometry(0.05,32,32);
-        // this.materialBombilla = new THREE.MeshBasicMaterial({color: 0xffffff});
-        // this.bombilla = new THREE.Mesh(this.example, this.materialBombilla);
-        
-        
+    setLampLight(){        
         this.lampLight = new THREE.PointLight(
             0xFFE598,   //Color
             0.5,       //intensity
@@ -71,7 +80,6 @@ export default class Enviroment{
         this.lampLight.position.set(-0.3, 0.89, 0.89);  
         this.lampLight.castShadow = true; 
         this.lampLight.shadow.mapSize.set(1024,1024);
-    
         this.scene.add(this.lampLight);
     }
 
@@ -111,7 +119,7 @@ export default class Enviroment{
     }
 
     SetPcLights(){
-        const Bright = 3;
+        const Bright = 8;
         const Color = 0xFF0000
 
         this.FrontFansLight = new THREE.RectAreaLight(

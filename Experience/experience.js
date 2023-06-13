@@ -27,6 +27,7 @@ export default class Experience{
         this.renderer = new Renderer();
         this.resources = new Resources(assets);
         this.world = new World();
+        
 
         this.world.on("room-added", ()=>{
             this.materials = new Materials();
@@ -40,6 +41,8 @@ export default class Experience{
             this.update();
         })
     }
+
+    
 
     resize(){
         this.camera.resize();

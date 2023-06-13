@@ -2,10 +2,12 @@ import * as THREE from 'three';
 import Experience from '../experience';
 
 
+
 export default class Materials{
     constructor(){
         this.experience = new Experience();
-        
+    
+
         this.room = this.experience.world.room.actualRoom;
         this.CreateFloorMaterial();
         this.CreateGlassMaterial();
@@ -14,14 +16,16 @@ export default class Materials{
         this.CreteGuitarMaterials();
         this.CreateWallMaterial();
         this.CreateMonitorMaterial();
+        this.CreateMetalMaterial();
 
+        this.ExampleSphere();
         this.SetMaterials();
         
     }
 
     SetMaterials(){
         console.log(this.room);
-        console.log(this.room.getObjectByName('Guitarra'));
+        console.log(this.room.getObjectByName('Mesa'));
         
         //Room
         this.room.getObjectByName('Piso').material = this.floorMaterial ;
@@ -31,6 +35,7 @@ export default class Materials{
 
         //furniture
         this.room.getObjectByName('Mesa').material = this.glassMaterial;
+
         this.room.getObjectByName('Patas').material = this.tableLegsMaterial;
 
         //PC
@@ -38,14 +43,11 @@ export default class Materials{
         this.room.getObjectByName('case').children[1].material = this.glowingRedMaterial;
 
         this.room.getObjectByName('Grafica').children[2].material = this.glowingRedMaterial;
-        this.room.getObjectByName('Grafica').children[1].material = this.tableLegsMaterial;
+        this.room.getObjectByName('Grafica').children[1].material = this.metalMaterial;
 
         this.room.getObjectByName('TecladoDer').children[3].material = this.glowingRedMaterial;
 
         this.room.getObjectByName('TecladoIzq').children[3].material = this.glowingRedMaterial;
-
-
-
         
         //Decoration
         this.room.getObjectByName('Guitarra').children[0].material = this.blackGuitarMaterial;
@@ -55,6 +57,24 @@ export default class Materials{
 
         this.room.getObjectByName('Maceta').material = this.floorMaterial;
         
+    }
+
+    ExampleSphere(){
+        const geometry = new THREE.SphereGeometry(0.20, 32, 32);
+        const sphere = new THREE.Mesh(geometry, this.metalMaterial);
+        sphere.position.set(0,1,0);
+
+        this.experience.scene.add(sphere);
+    }
+
+    CreateMetalMaterial(){
+        this.metalMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF,      // Color negro
+            roughness: 0,       // Rugosidad (puede ajustarse según el nivel de brillo deseado)
+            metalness: 1,       // Metalicidad (puede ajustarse según el nivel de brillo deseado)
+        });
+        this.metalMaterial.clearcoat = 0;
+    
     }
 
     CreateMonitorMaterial(){
@@ -89,10 +109,6 @@ export default class Materials{
     }
 
     CreateWallMaterial(){
-
-    }
-
-    CreateMetalMsterial(){
 
     }
 

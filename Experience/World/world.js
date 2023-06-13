@@ -18,8 +18,8 @@ export default class World extends EventEmitter{
         this.resources = this.experience.resources;
 
         this.resources.on('ready', ()=>{
-            this.enviroment = new Enviroment();
             this.room = new Room();
+            this.enviroment = new Enviroment();
             this.emit('room-added');
         });
     }
