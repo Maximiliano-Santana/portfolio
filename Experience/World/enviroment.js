@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js';
 import Experience from "../experience.js";
+//import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 
 
 export default class Enviroment extends RGBELoader{
@@ -15,8 +16,6 @@ export default class Enviroment extends RGBELoader{
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
 
-        this.SetHDRI();
-        
         this.setSunlight();
         this.setLampLight();
         this.setAmbienLight();
@@ -24,68 +23,85 @@ export default class Enviroment extends RGBELoader{
         this.SetLedsLight();
         this.SetPcLights();
 
-        //this.rectAreaHelper = new RectAreaLightHelper(this.FansLight2);
-        //this.FansLight2.add(this.rectAreaHelper);
+
+        //this.rectAreaHelper = new RectAreaLightHelper(this.windowLight);
+        //this.windowLight.add(this.rectAreaHelper);
 
         //this.directionalHelper = new DirectionalLightHelper(this.sunLight)
         //this.sunLight.add(this.directionalHelper);
 
         //this.pointHelp = new PointLightHelper(this.lampLight)
         //this.lampLight.add(this.pointHelp);
+
+        const backgroundTexture = new THREE.TextureLoader().load('');
+        this.scene.background = backgroundTexture; //this make the backround go aplha i dont know how but it works 
+
     }
 
-    SetHDRI(){
-        this.hdrLoader = new RGBELoader();
-
-        this.hdrLoader.load('/Experience/public/Textures/sky.hdr', function(texture){
-            console.log('hola');
-        });
-    }
+        setAmbienLight(){
+            this.ambienLinght = new THREE.AmbientLight(0xffffff, 0.01);
+            this.scene.add(this.ambienLinght);
+        }
 
     setSunlight(){
         this.sunLight = new THREE.DirectionalLight("#ffffff", 0.15);
         this.sunLight.position.set(-3, 2, -0.5);
         this.sunLight.castShadow = true;
         this.sunLight.shadow.camera.far = 5;
-        this.sunLight.shadow.mapSize.set(2080,2080);
-
-        console.log(this.sunLight.shadow.radius)
+        this.sunLight.shadow.bias = 0.0018;
+        this.sunLight.shadow.mapSize.set(6080,6080);
         this.scene.add(this.sunLight);
-    }
-
-    setAmbienLight(){
-        this.ambienLinght = new THREE.AmbientLight(0xffffff, 0.055);
-        this.scene.add(this.ambienLinght);
     }
 
     SetScreenLight(){
         this.screenLight = new THREE.RectAreaLight(
             0xFFFFFF,   //Color
-            1,          //Intensity
-            0.5,          //width
-            0.3           //height
+            3,          //Intensity
+            0.55,          //width
+            0.32           //height
         )
-        this.screenLight.position.set(-0.52, 0.9, 0.1);
+        this.screenLight.position.set(-0.56, 0.9, 0.05);
         this.screenLight.rotation.set(0, -Math.PI/2, 0);
         this.scene.add(this.screenLight);
     }
 
     setLampLight(){        
-        this.lampLight = new THREE.PointLight(
-            0xFFE598,   //Color
-            0.5,       //intensity
-            3,          //Distance
-            4           //decay
+        this.lampLookAt = new THREE.Object3D();
+        this.lampLookAt.position.set(0.5, 0.7 , 0);
+        this.scene.add(this.lampLookAt);
+
+        this.lampLight = new THREE.SpotLight(
+            0xFFFCCE,
+            0.2, //Intensity
+            5,
+            Math.PI/4,
+            0.8
         );
-        this.lampLight.position.set(-0.3, 0.89, 0.89);  
-        this.lampLight.castShadow = true; 
-        this.lampLight.shadow.mapSize.set(1024,1024);
+        this.lampLight.decay = 5;
+        this.lampLight.position.set(-0.3, 0.89, 0.89);
+        this.lampLight.castShadow = true;
+        this.lampLight.shadow.mapSize.set(1400,1400);
+        this.lampLight.shadow.bias = 0;
+
+        this.lampLight.target = this.lampLookAt;
+
         this.scene.add(this.lampLight);
+
+
+        this.lampLight2 = new THREE.PointLight(
+            0xFFE598,   //Color
+            1.5,       //intensity
+            0.5,          //Distance
+            3          //decay
+        );
+        this.lampLight2.position.set(-0.3, 0.89, 0.89);  
+
+        this.scene.add(this.lampLight2);
     }
 
     SetLedsLight(){
-        const LedsBright = 3;
-        const LedsColor = 0xFF0000
+        const LedsBright = 1;
+        const LedsColor = 0xFF4848;
 
         this.LedsLight = new THREE.RectAreaLight(
             LedsColor,       //Color
@@ -93,7 +109,7 @@ export default class Enviroment extends RGBELoader{
             0.1,            //width
             2               //height
         )
-        this.LedsLight.position.set(-0.75, 1, 1.2);
+        this.LedsLight.position.set(-0.78, 1, 1.2);
         this.LedsLight.rotation.set(0, -this.Degree45, 0);
         this.scene.add(this.LedsLight);
 
@@ -103,7 +119,7 @@ export default class Enviroment extends RGBELoader{
             0.1,            //width
             2               //height
         )
-        this.LedsLight2.position.set(-0.75, 2, 0.2);
+        this.LedsLight2.position.set(-0.78, 2, 0.2);
         this.LedsLight2.rotation.set(this.Degree90, this.Degree180 + this.Degree45, 0);
         this.scene.add(this.LedsLight2);
 
@@ -154,6 +170,7 @@ export default class Enviroment extends RGBELoader{
 
 
     }
+
     resize(){
 
     }

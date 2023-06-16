@@ -6,31 +6,36 @@ import Experience from '../experience';
 export default class Materials{
     constructor(){
         this.experience = new Experience();
-    
-
         this.room = this.experience.world.room.actualRoom;
+        this.enviroment = this.experience.enviroment;
+
+        this.CreateWallMaterial();
         this.CreateFloorMaterial();
+        this.CreateTableLegsMaterial();
+
         this.CreateGlassMaterial();
         this.CreateGlowingRedMaterial();
-        this.CreateTableLegsMaterial();
+        
         this.CreteGuitarMaterials();
-        this.CreateWallMaterial();
         this.CreateMonitorMaterial();
         this.CreateMetalMaterial();
+        this.CreateCaseMaterial();
+        this.CreateChairMaterial();
 
-        this.ExampleSphere();
+        this.CreateMousepadMaterial();
+        this.CreatePaintMaterial();
+
         this.SetMaterials();
         
     }
 
     SetMaterials(){
-        console.log(this.room);
-        console.log(this.room.getObjectByName('Mesa'));
-        
         //Room
         this.room.getObjectByName('Piso').material = this.floorMaterial ;
-        this.room.getObjectByName('Pared').material = this.floorMaterial;
-        this.room.getObjectByName('Ventana').material = this.floorMaterial;
+        this.room.getObjectByName('Pared').material = this.wallMaterial;
+
+        this.room.getObjectByName('Ventana').material = this.ropeWhiteMaterial;
+        
         this.room.getObjectByName('Leds').material = this.glowingRedMaterial;
 
         //furniture
@@ -38,17 +43,26 @@ export default class Materials{
 
         this.room.getObjectByName('Patas').material = this.tableLegsMaterial;
 
+        
+        this.room.getObjectByName('Silla').children[1].material = this.chairMaterial;
+        this.room.getObjectByName('Silla').children[0].material = this.caseMaterial;
+
         //PC
         this.room.getObjectByName('Ventiladores').material = this.glowingRedMaterial;
+        
+        this.room.getObjectByName('case').children[0].material = this.caseMaterial;
         this.room.getObjectByName('case').children[1].material = this.glowingRedMaterial;
-
+        
+        
         this.room.getObjectByName('Grafica').children[2].material = this.glowingRedMaterial;
         this.room.getObjectByName('Grafica').children[1].material = this.metalMaterial;
-
-        this.room.getObjectByName('TecladoDer').children[3].material = this.glowingRedMaterial;
-
-        this.room.getObjectByName('TecladoIzq').children[3].material = this.glowingRedMaterial;
         
+        this.room.getObjectByName('TecladoDer').children[3].material = this.glowingRedMaterial;
+        this.room.getObjectByName('TecladoIzq').children[3].material = this.glowingRedMaterial;
+
+        this.room.getObjectByName('Mouse').material = this.wallMaterial;
+        
+        this.room.getObjectByName('Monitor').children[0].material = this.caseMaterial;
         //Decoration
         this.room.getObjectByName('Guitarra').children[0].material = this.blackGuitarMaterial;
         this.room.getObjectByName('Guitarra').children[1].material = this.ropeWhiteMaterial;
@@ -56,22 +70,26 @@ export default class Materials{
         this.room.getObjectByName('Guitarra').children[3].material = this.ropeWhiteMaterial;
 
         this.room.getObjectByName('Maceta').material = this.floorMaterial;
+
+        this.room.getObjectByName('Cortinas').material = this.chairMaterial;
+
+        this.room.getObjectByName('Cuadro').material = this.paintMaterial;
+        this.room.getObjectByName('Mousepad').material = this.mosuepadMaterial;
+
+        this.room.getObjectByName('EstanteExagonal').material = this.caseMaterial;
+
+        this.room.getObjectByName('Microfono').material = this.caseMaterial;
+        this.room.getObjectByName('Lampara').material = this.caseMaterial;
         
     }
 
-    ExampleSphere(){
-        const geometry = new THREE.SphereGeometry(0.20, 32, 32);
-        const sphere = new THREE.Mesh(geometry, this.metalMaterial);
-        sphere.position.set(0,1,0);
 
-        this.experience.scene.add(sphere);
-    }
 
     CreateMetalMaterial(){
         this.metalMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF,      // Color negro
             roughness: 0,       // Rugosidad (puede ajustarse según el nivel de brillo deseado)
-            metalness: 1,       // Metalicidad (puede ajustarse según el nivel de brillo deseado)
+            metalness: 0.9,       // Metalicidad (puede ajustarse según el nivel de brillo deseado)
         });
         this.metalMaterial.clearcoat = 0;
     
@@ -91,32 +109,46 @@ export default class Materials{
         this.glassMaterial.thickness= 0;
         this.glassMaterial.specularIntensity = 1;
         this.glassMaterial.clearcoat = 1;
-    }
-
-    CreateFloorMaterial(){
-        //this.textureLoader = new THREE.TextureLoader();
-        //this.floorTexture = this.textureLoader.load('/Experience/public/Textures/Loseta.JPG');
-        //this.floorTexture.wrapS = THREE.ClampToEdgeWrapping;
-        //this.floorTexture.wrapT = THREE.ClampToEdgeWrapping;
-        //this.floorTexture.repeat.set(0.1,0.1);
-
-        this.floorMaterial = new THREE.MeshStandardMaterial({
-            //map: this.floorTexture,       // Textura de la loseta
-            roughness: 0.8,     // Rugosidad del material (ajústalo según tus necesidades)
-            metalness: 0.2,     // Metalicidad del material (ajústalo según tus necesidades)
-        });       
-          
+        this.glassMaterial.transparent = true;
     }
 
     CreateWallMaterial(){
+        const normalMapTexture = new THREE.TextureLoader().load('/Experience/public/Textures/bumpWall.jpg');
+        
+        this.wallMaterial = new THREE.MeshStandardMaterial({
+            roughness: 0.5,     // Rugosidad del material (ajústalo según tus necesidades)
+            metalness: 0.0,     // Metalicidad del material (ajústalo según tus necesidades)
+        });  
 
+        normalMapTexture.wrapS = THREE.RepeatWrapping;
+        normalMapTexture.wrapT = THREE.RepeatWrapping;
+        normalMapTexture.repeat.set(8,10);
+        this.wallMaterial.bumpMap = normalMapTexture;
+        this.wallMaterial.bumpScale = 0.01;
+    }
+
+    CreateFloorMaterial(){
+        const normalMapTexture = new THREE.TextureLoader().load('/Experience/public/Textures/Loseta.jpg');
+        
+        this.floorMaterial = new THREE.MeshStandardMaterial({
+            map: normalMapTexture,
+            color: 0xffffff,
+            roughness: 0.15,     // Rugosidad del material (ajústalo según tus necesidades)
+            metalness: 0.0,     // Metalicidad del material (ajústalo según tus necesidades)
+        });  
+
+        normalMapTexture.wrapS = THREE.RepeatWrapping;
+        normalMapTexture.wrapT = THREE.RepeatWrapping;
+        normalMapTexture.repeat.set(1,1);
+        this.floorMaterial.bumpMap = normalMapTexture;
+        this.floorMaterial.bumpScale = -0.015;
     }
 
     CreateGlowingRedMaterial(){
-        this.glowingRedMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff0000, 
-            emissive: 0xff0000,
-            emissiveIntensity: 2
+        this.glowingRedMaterial = new THREE.MeshStandardMaterial({
+            color: 0xFF2828, 
+            emissive: 0xFF2828,
+            emissiveIntensity: 1,
           });
     }
 
@@ -129,14 +161,12 @@ export default class Materials{
     }
 
     CreteGuitarMaterials(){
-        this.blackGuitarMaterial = new THREE.MeshPhysicalMaterial({
+        this.blackGuitarMaterial = new THREE.MeshStandardMaterial({
             color: 0x000000,      // Color negro
             roughness: 0.0,       // Rugosidad (puede ajustarse según el nivel de brillo deseado)
             metalness: 0,       // Metalicidad (puede ajustarse según el nivel de brillo deseado)
         });
-        this.blackGuitarMaterial.clearcoat = 1;
         
-
         this.ropeWhiteMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff, // Color blanco
             roughness: 0.5, // Rugosidad media
@@ -149,5 +179,55 @@ export default class Materials{
         });
     }
 
+    CreateCaseMaterial(){
+        this.caseMaterial = new THREE.MeshStandardMaterial({
+            color: 0x262623,
+            roughness:0.5,
+        })
+    }
+
+    CreateChairMaterial(){
+        const normalMapTexture = new THREE.TextureLoader().load('/Experience/public/Textures/bumpCloth.jpg');
+        
+        this.chairMaterial = new THREE.MeshStandardMaterial({
+            color: 0x43433F,
+            roughness:1,
+        })
+
+        normalMapTexture.wrapS = THREE.RepeatWrapping;
+        normalMapTexture.wrapT = THREE.RepeatWrapping;
+        normalMapTexture.repeat.set(2,2);
+        this.chairMaterial.bumpMap = normalMapTexture;
+        this.chairMaterial.bumpScale = 0.005;
+    }
+
+    CreatePaintMaterial(){
+        const texture = new THREE.TextureLoader().load('/Experience/public/Textures/Cuadro.jpeg');
+        
+        this.paintMaterial = new THREE.MeshStandardMaterial({
+            map: texture,
+            roughness: 0.5,     // Rugosidad del material (ajústalo según tus necesidades)
+            metalness: 0.0,     // Metalicidad del material (ajústalo según tus necesidades)
+        });  
+
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        
+        
+    }
+
+    CreateMousepadMaterial(){
+        const texture = new THREE.TextureLoader().load('/Experience/public/Textures/mousepad.jpeg');
+        
+        this.mosuepadMaterial = new THREE.MeshStandardMaterial({
+            map: texture,
+            roughness: 0.5,     // Rugosidad del material (ajústalo según tus necesidades)
+            metalness: 0.0,     // Metalicidad del material (ajústalo según tus necesidades)
+        });  
+
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        
+    }
     
 }
