@@ -28,7 +28,6 @@ export default class Experience{
         this.resources = new Resources(assets);
         this.world = new World();
         
-
         this.world.on("room-added", ()=>{
             this.materials = new Materials();
         });

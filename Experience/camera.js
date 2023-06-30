@@ -10,8 +10,8 @@ export default class Camera{
         this.canvas = this.experience.canvas;
 
         this.createPerspectiveCamera();
-        this.crateOrthographicCamera();
-        this.setOrbitControls();
+        //this.crateOrthographicCamera();
+        //this.setOrbitControls();
     }
 
     createPerspectiveCamera(){
@@ -22,17 +22,9 @@ export default class Camera{
             1000
         );
         this.scene.add(this.perspectiveCamera);
-        this.perspectiveCamera.position.z = 10;
+        this.perspectiveCamera.position.set(5, 1.5, 2);
+        this.perspectiveCamera.lookAt(0,0.75,0)
 
-    
-        const size = 10;
-        const divisions = 10;
-
-        //const gridHelper = new THREE.GridHelper( size, divisions );
-        //this.scene.add( gridHelper );
-
-        //const axesHelper = new THREE.AxesHelper(10);
-        //this.scene.add( axesHelper );
     }
 
     crateOrthographicCamera(){
@@ -51,7 +43,7 @@ export default class Camera{
 
     setOrbitControls(){
         this.controls = new OrbitControls(this.perspectiveCamera, this.canvas);
-        this.controls.enableDamping = true;
+        this.controls.enableDamping = false;
         this.controls.enableZoom = true;
     }
   

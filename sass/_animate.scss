@@ -1,0 +1,68 @@
+@use 'var';
+
+// classes animated
+
+.animateDiscoverUp{
+  animation: discoverUp 0.3s ease-out forwards;
+}
+.animateDiscoverDown{
+  animation: discoverDown 0.3s ease-out forwards;
+}
+.animateCoverUp{
+  animation: discoverUp 0.3s ease-out reverse forwards;
+}
+.animateCoverDown{
+  animation: discoverDown 0.3s ease-out reverse forwards;
+}
+
+.animateDotMove{
+  animation: dotMove 0.5s ease-in-out forwards;
+}
+// Animations
+
+@keyframes paintWord {
+  0% {
+    background-color: var.$black;
+  }
+  50% {
+    background-color: var.$redD;
+  }
+  100%{
+    background-color: var.$black; 
+  }
+}
+
+@keyframes dotMove{
+  0%{
+    transform: scale(1,1);
+  }
+  40%{
+    transform: scale(0.5, 2.2);
+  }
+  60%{
+    transform: scale(0.3, 2.2);
+  }
+  100%{
+    transform: scale(1,1);
+    }
+}
+
+@keyframes discoverUp{
+  0%{
+    clip-path: polygon(100% 100%, 0% 100%, 0% 0%, 100% 0%);
+  }
+  100%{
+    clip-path: polygon(100% 100%, 100% 100%, 100% 0%, 100% 0%);
+    
+  }
+}
+
+@keyframes discoverDown{
+  0%{
+    clip-path: polygon(0 0, 100% 0%, 100% 100%, 0% 100%);
+  }
+  100%{
+    clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    
+  }
+}
